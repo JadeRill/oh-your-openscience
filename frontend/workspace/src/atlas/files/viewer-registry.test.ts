@@ -5,6 +5,10 @@ describe("viewer registry", () => {
   test("resolves common formats consistently", () => {
     expect(resolveViewer({ name: "report.md" }).kind).toBe("markdown")
     expect(resolveViewer({ name: "analysis.ipynb" }).kind).toBe("notebook")
+    expect(resolveViewer({ name: "analysis.Rmd" })).toMatchObject({ kind: "markdown", language: "markdown" })
+    expect(resolveViewer({ name: "analysis.qmd" })).toMatchObject({ kind: "markdown", language: "markdown" })
+    expect(resolveViewer({ name: "analysis.Rproj" })).toMatchObject({ kind: "code", language: "ini" })
+    expect(resolveViewer({ name: "renv.lock" })).toMatchObject({ kind: "code", language: "json" })
     expect(resolveViewer({ name: "results.csv" })).toMatchObject({ kind: "table", table: "csv" })
     expect(resolveViewer({ name: "records.json", content: "[{}]" })).toMatchObject({ kind: "table", table: "json" })
     expect(resolveViewer({ name: "paper.pdf" }).kind).toBe("pdf")
@@ -13,6 +17,7 @@ describe("viewer registry", () => {
 
   test("keeps source formats as text and unfamiliar containers as binary", () => {
     expect(resolveViewer({ name: "analysis.py" })).toMatchObject({ kind: "code", language: "python" })
+    expect(resolveViewer({ name: "analysis.R" })).toMatchObject({ kind: "code", language: "r" })
     expect(viewerUsesText(resolveViewer({ name: "notes.yaml" }))).toBeTrue()
     expect(resolveViewer({ name: "weights.safetensors" }).kind).toBe("binary")
     expect(resolveViewer({ name: "dataset.h5ad", encoding: "base64" }).kind).toBe("binary")

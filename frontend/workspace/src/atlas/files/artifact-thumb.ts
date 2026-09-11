@@ -59,6 +59,9 @@ export const LANG: Record<string, string> = {
   svg: "xml",
   sql: "sql",
   r: "r",
+  rmd: "markdown",
+  qmd: "markdown",
+  rproj: "ini",
   jl: "julia",
   lua: "lua",
   dockerfile: "docker",
@@ -81,11 +84,13 @@ const textual = (mime: string) =>
 export function thumbKind(version: StoredArtifactVersion): ThumbKind {
   if (version.mimeType.startsWith("image/")) return version.size <= STORED_ARTIFACT_PREVIEW_LIMIT ? "image" : "binary"
   const ext = extension(version.filename)
+  const basename = version.filename.replaceAll("\\", "/").split("/").at(-1)?.toLowerCase() ?? ""
   if ((version.mimeType === "application/pdf" || ext === "pdf") && version.size <= STORED_ARTIFACT_PREVIEW_LIMIT)
     return "pdf"
   if (version.size > PREVIEW_LIMIT) return "binary"
   if (["csv", "tsv", "jsonl"].includes(ext)) return "table"
   if (ext === "ipynb") return "notebook"
+  if (basename === "renv.lock") return "text"
   if (generic(version.mimeType)) return LANG[ext] ? "text" : "binary"
   return textual(version.mimeType) ? "text" : "binary"
 }

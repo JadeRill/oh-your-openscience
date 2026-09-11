@@ -756,6 +756,101 @@
   background: var(--color-surface-solid);
 }
 
+.atlas-file-notebook-image {
+  display: block;
+  max-width: min(100%, 720px);
+  margin: 12px 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--atlas-radius-sm);
+  background: white;
+}
+
+.atlas-r-console {
+  margin: 18px 0 28px;
+  padding: 0 18px;
+}
+
+.atlas-r-console-toggle {
+  padding: 7px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--atlas-radius-xs);
+  background: var(--color-bg-subtle);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.atlas-r-console-panel {
+  margin-top: 8px;
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--atlas-radius-sm);
+  background: var(--color-bg-subtle);
+}
+
+.atlas-r-console-input {
+  display: block;
+  width: 100%;
+  min-height: 82px;
+  resize: vertical;
+  padding: 9px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--atlas-radius-xs);
+  background: var(--color-surface-solid);
+  color: var(--color-text);
+  font-family: var(--font-code);
+  font-size: var(--font-size-small);
+}
+
+.atlas-r-console-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-x-small);
+}
+
+.atlas-r-console-actions button {
+  padding: 5px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--atlas-radius-xs);
+  background: var(--color-surface-solid);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.atlas-file-rmarkdown-chunk {
+  margin: 12px 0;
+  border: 1px solid var(--border-base);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.atlas-file-rmarkdown-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  color: var(--text-weak);
+  background: var(--surface-raised);
+  font-size: 12px;
+}
+
+.atlas-file-rmarkdown-toolbar button {
+  border: 0;
+  border-radius: 5px;
+  padding: 4px 8px;
+  color: var(--text-strong);
+  background: var(--surface-active);
+  cursor: pointer;
+}
+
+.atlas-file-rmarkdown-toolbar button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
 .atlas-file-pdf,
 .atlas-file-science {
   box-sizing: border-box;

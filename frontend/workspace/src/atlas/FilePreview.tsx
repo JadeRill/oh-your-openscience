@@ -62,6 +62,7 @@ import { resolveViewer } from "@/atlas/files/viewer-registry"
 import { assetUrl, localAssetPath } from "@/utils/markdown-assets"
 import { discardFileDraft, recoverFileDraftState, rememberFileDraft } from "@/atlas/file-drafts"
 import { MarkdownDocument } from "@/atlas/MarkdownDocument"
+import { TextContentView } from "@/atlas/files/TextContentView"
 import { projectContains, rawFileQuery } from "@/utils/project-file"
 import { CodeEditor } from "@/atlas/CodeEditor"
 import { HTML_STYLESHEET_BYTES, htmlStylesheets, loadHtmlStylesheets, rewriteHtmlAssets } from "@/utils/html-assets"
@@ -431,6 +432,7 @@ export function FileView(props: {
     }
     if (biological()) return "scientific-data"
     if (scientific()) return "science"
+    if (common().kind === "notebook") return "notebook"
     if (common().kind === "markdown") return "markdown"
     if (common().kind === "html") return "html"
     if (common().kind === "table") return "table"
@@ -982,14 +984,26 @@ export function FileView(props: {
                 </Match>
 
                 {/* ordinary Markdown opens as a quiet document */}
-                <Match when={kind() === "markdown" && !view.source && !manuscript()}>
-                  <MarkdownDocument
-                    name={name()}
-                    text={view.draft}
-                    resolveImage={image}
-                    resolveFile={file}
-                    onOpenFile={openFile}
-                  />
+                <Match when={(kind() === "markdown" || kind() === "notebook") && !view.source && !manuscript()}>
+                  <Show
+                    when={kind() === "notebook" || common().extension === "rmd" || common().extension === "qmd"}
+                    fallback={
+                      <MarkdownDocument
+                        name={name()}
+                        text={view.draft}
+                        resolveImage={image}
+                        resolveFile={file}
+                        onOpenFile={openFile}
+                      />
+                    }
+                  >
+                    <TextContentView
+                      name={name()}
+                      text={view.draft}
+                      viewer={common()}
+                      sessionID={fileSessionID()}
+                    />
+                  </Show>
                 </Match>
 
                 {/* HTML documents render fully sandboxed — no scripts, no same-origin access */}
@@ -1101,6 +1115,7 @@ export function FileView(props: {
                   when={
                     (kind() === "code" ||
                       kind() === "markdown" ||
+                      kind() === "notebook" ||
                       kind() === "html" ||
                       kind() === "science" ||
                       kind() === "scientific-data" ||
@@ -1113,7 +1128,7 @@ export function FileView(props: {
                     value={view.draft}
                     language={LANG[e()] ?? "text"}
                     readOnly={writable() === false}
-                    wrap={kind() === "markdown"}
+                    wrap={kind() === "markdown" || kind() === "notebook"}
                     onChange={(draft) => setView({ draft, saveError: view.conflict ? view.saveError : undefined })}
                     onSave={() => void save()}
                   />

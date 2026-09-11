@@ -11,8 +11,8 @@ export type ViewerResolution = {
 }
 
 const images = new Set(["png", "jpg", "jpeg", "gif", "webp", "svg", "bmp", "avif"])
-const markdown = new Set(["md", "markdown", "mdx"])
-const text = new Set(["txt", "log", "yaml", "yml", "toml", "ini", "cfg", "conf", "xml"])
+const markdown = new Set(["md", "markdown", "mdx", "rmd", "qmd"])
+const text = new Set(["txt", "log", "yaml", "yml", "toml", "ini", "cfg", "conf", "xml", "rproj"])
 
 const generic = (mime: string) => !mime || mime.startsWith("application/octet-stream")
 const textual = (mime: string) =>
@@ -25,6 +25,7 @@ export function resolveViewer(input: {
   content?: string
 }): ViewerResolution {
   const ext = extension(input.name)
+  const basename = input.name.replaceAll("\\", "/").split("/").at(-1)?.toLowerCase() ?? ""
   const mime = input.mimeType?.toLowerCase() ?? ""
   const language = LANG[ext] ?? "text"
   const binary = input.encoding === "base64"
@@ -35,6 +36,7 @@ export function resolveViewer(input: {
   if (markdown.has(ext) || mime.includes("markdown")) return { kind: "markdown", extension: ext, language: "markdown" }
   if (ext === "html" || ext === "htm") return { kind: "html", extension: ext, language: "html" }
   if (ext === "ipynb") return { kind: "notebook", extension: ext, language: "json" }
+  if (basename === "renv.lock") return { kind: "code", extension: "lock", language: "json" }
   if (ext === "csv" || ext === "tsv" || ext === "jsonl" || ext === "ndjson") {
     return {
       kind: "table",

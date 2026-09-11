@@ -3,6 +3,7 @@ import { resolveArtifactPath } from "@/artifacts/context"
 
 export type FileKind =
   | "markdown"
+  | "notebook"
   | "html"
   | "table"
   | "scientific-data"
